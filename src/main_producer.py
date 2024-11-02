@@ -15,7 +15,7 @@ def main():
             kafka_producer.produce(data)
 
             # Sleep for 30 seconds
-            time.sleep(5)
+            time.sleep(30)
     finally:
         kafka_producer.close()
 
