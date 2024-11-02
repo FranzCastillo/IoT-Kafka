@@ -1,6 +1,7 @@
 import json
 
 from confluent_kafka import Consumer, KafkaException
+from encoder_decoder import EncoderDecoder
 
 
 class KafkaConsumer:
@@ -13,6 +14,7 @@ class KafkaConsumer:
             'auto.offset.reset': 'earliest'
         })
         self._consumer.subscribe([self._topic])
+        self.ed = EncoderDecoder()
 
     def consume(self):
         try:
@@ -21,9 +23,12 @@ class KafkaConsumer:
                 return None
             if msg.error():
                 raise KafkaException(msg.error())
-            data = json.loads(msg.value().decode('utf-8'))
-            print(f"Consumed data from {self._topic}: {data}")
+            
+            raw_data = msg.value()
+            data = self.ed.decode(raw_data)
+            print(f"Consumed data from {self._topic}: {data}; raw: {msg.value()}")
             return data
+        
         except KafkaException as e:
             print(f"Failed to consume data: {e}")
             return None
