@@ -30,7 +30,7 @@ class Sensor:
         )
 
     def get_humidity(self):
-        humidity = round(random.normalvariate(self._mean_humidity, self._std_humidity), 2)
+        humidity = int(random.normalvariate(self._mean_humidity, self._std_humidity))
         return max(
             self._lowest_humidity,
             min(
